@@ -1,0 +1,28 @@
+#!/bin/sh
+
+searchPath=/Library/MobileSubstrate/DynamicLibraries/*
+
+for f in $searchPath
+do
+    length="${#f}"
+    dylibLength=112
+    bundlePath=113
+    if [ "$length" -eq "$dylibLength" ]; then
+
+        if [ "${f:111:1}" == "b" ]
+        then
+            mv "$f" "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.dylib" 2>/dev/null
+        elif [ "${f:111:1}" == "t" ]
+        then
+            mv "$f" "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.plist" 2>/dev/null
+        fi
+
+    elif [ "$length" -eq "$bundlePath" ]; then
+
+        if [ "${f:112:1}" == "e" ]
+        then
+            mv "$f" "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.bundle" 2>/dev/null
+        fi
+
+    fi
+done
