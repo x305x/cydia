@@ -1,0 +1,22 @@
+#!/bin/sh
+
+h=""
+alphabet="abcdefghijklmnopqrstuvwxyz0123456789"
+
+for i in {0..63}
+do
+    r=$((RANDOM % (36)))
+    h="${h}${alphabet:$r:1}"
+done
+
+LC_ALL=C
+sed -i.bak -e "s/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/${h}/g" "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.dylib"
+rm "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.dylib.bak"
+
+mv "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.bundle" "/Library/MobileSubstrate/DynamicLibraries/${h}.bundle" 2>/dev/null
+mv "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.dylib" "/Library/MobileSubstrate/DynamicLibraries/${h}.dylib" 2>/dev/null
+mv "/Library/MobileSubstrate/DynamicLibraries/DeadTweak.plist" "/Library/MobileSubstrate/DynamicLibraries/${h}.plist" 2>/dev/null
+
+ldid -S "/Library/MobileSubstrate/DynamicLibraries/${h}.dylib" || true
+
+killall -9 Snapchat || echo "Kill"
